@@ -27,3 +27,8 @@ Workquarium is a virtual underwater social and coworking platform where users ca
 ## Architecture
 
 The Workquarium mobile application connects to a shared backend, authentication system, and database used by both the web and mobile applications.
+
+## Run App
+```bash
+npx expo start -c
+```
