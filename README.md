@@ -32,3 +32,8 @@ The Workquarium mobile application connects to a shared backend, authentication 
 ```bash
 npx expo start -c
 ```
+
+## Run Server
+```bash
+node server/server.js
+```
