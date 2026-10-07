@@ -1,9 +1,26 @@
-:root {
-  --font-display:
-    Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-  --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+/* Worqarium — NativeWind global stylesheet.
+   Tailwind layers are used sparingly for utility spacing/layout; the
+   aquatic look (gradients, glass, organic shapes, animation) lives in the
+   component layer (see src/components/aquarium) rather than in utility
+   classes, since RN benefits more from StyleSheet/Animated for that work. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Baseline text color across the app — a warm ink, never pure black,
+     so copy still reads as part of the underwater world. */
+  * {
+    color: #0d2b36;
+  }
+}
+
+@layer utilities {
+  .text-shell {
+    color: #fbfdf9;
+  }
+  .bg-reef {
+    background-color: #115d8c;
+  }
 }
