@@ -1,58 +1,48 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, Image } from 'react-native';
+// src/components/aquarium/FishSprite.js
+//
+// Renders one fish from constants/fishAssets.js. Pass either:
+//   - fishKey="blueTang"           (looked up via getFish)
+//   - fish={getFish('blueTang')}   (entry object you already resolved)
+//
+// Size: give `width` (height is derived from the fish's real aspect ratio
+// so nothing looks stretched) OR give both `width` and `height` to force it.
+// `style` can add position (top/left/right/bottom) and transforms.
+
+import { Image, StyleSheet } from 'react-native';
 import { getFish } from '../../constants/fishAssets';
 
-/**
- * Renders one fish asset. When `swim` is true it drifts gently left/right
- * and bobs vertically — enough to feel alive without being distracting.
- * `facing` flips the sprite ('left' | 'right').
- */
 export default function FishSprite({
-  species = 'orangeClownfish',
-  width = 90,
-  swim = false,
-  facing = 'right',
+  fishKey,
+  fish,
+  width = 80,
+  height,
   style,
+  mirror = false,
 }) {
-  const fish = getFish(species);
-  const height = width / fish.aspect;
+  const entry = fish || (fishKey ? getFish(fishKey) : null);
+  if (!entry?.source) return null;
 
-  const bob = useRef(new Animated.Value(0)).current;
-  const drift = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!swim) return undefined;
-    const bobLoop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(bob, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(bob, { toValue: 0, duration: 1600, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-      ])
-    );
-    const driftLoop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(drift, { toValue: 1, duration: 3200, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-        Animated.timing(drift, { toValue: 0, duration: 3200, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      ])
-    );
-    bobLoop.start();
-    driftLoop.start();
-    return () => {
-      bobLoop.stop();
-      driftLoop.stop();
-    };
-  }, [swim, bob, drift]);
-
-  const translateY = bob.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
-  const translateX = drift.interpolate({ inputRange: [0, 1], outputRange: [0, 8] });
-  const flip = facing === 'left' ? -1 : 1;
+  const resolvedHeight = height ?? width / entry.aspect;
 
   return (
-    <Animated.View style={[{ width, height, transform: [{ translateY }, { translateX }] }, style]}>
-      <Image
-        source={fish.source}
-        style={{ width, height, transform: [{ scaleX: flip }] }}
-        resizeMode="contain"
-      />
-    </Animated.View>
+    <Image
+      source={entry.source}
+      resizeMode="contain"
+      style={[
+        styles.base,
+        { width, height: resolvedHeight },
+        mirror && styles.mirrored,
+        style,
+      ]}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  base: {
+    position: 'absolute',
+  },
+  mirrored: {
+    transform: [{ scaleX: -1 }],
+  },
+});

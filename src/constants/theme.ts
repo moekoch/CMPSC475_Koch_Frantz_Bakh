@@ -1,4 +1,3 @@
-
 /**
  * Expo router template theme tokens (Colors / Fonts / Spacing / layout)
  * — required by app-tabs, themed-text, themed-view, use-theme, index/explore screens.
@@ -79,6 +78,11 @@ export const COLORS = {
   deepWater: '#115d8c',
   abyss: '#0a3a5c',
 
+  // Exact 2-stop gradient supplied from Figma (loader / default scene bg):
+  // white 0% -> held flat to 16% -> blends to #80C0E0 at 100%.
+  gradientWhite: '#ffffff',
+  gradientBlue: '#80C0E0',
+
   // Life & accents
   coral: '#ff7a59',
   coralDeep: '#e2572f',
@@ -102,6 +106,12 @@ export const COLORS = {
 };
 
 export const GRADIENTS = {
+  // Exact match to the Figma "Custom" gradient panel supplied:
+  // stop 1: #ffffff at 16%, stop 2: #80C0E0 at 100%, linear/vertical.
+  loader: {
+    colors: [COLORS.gradientWhite, COLORS.gradientBlue],
+    locations: [0.16, 1],
+  },
   shallowDive: [COLORS.surfaceFoam, COLORS.skylight, COLORS.shallow],
   midDive: [COLORS.shallow, COLORS.midWater, COLORS.deepWater],
   deepDive: [COLORS.midWater, COLORS.deepWater, COLORS.abyss],
@@ -135,4 +145,4 @@ export const RADII = {
 
 export const SPACING = { xs: 6, sm: 10, md: 16, lg: 24, xl: 32, xxl: 48 };
 
-export default { COLORS, GRADIENTS, FONTS, FONT_FALLBACK, RADII, SPACING, BottomTabInset, MaxContentWidth };
+export default { Colors, Fonts, Spacing, BottomTabInset, MaxContentWidth, COLORS, GRADIENTS, FONTS, FONT_FALLBACK, RADII, SPACING };

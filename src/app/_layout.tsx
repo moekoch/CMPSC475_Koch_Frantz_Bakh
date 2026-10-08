@@ -1,18 +1,12 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+// src/app/_layout.tsx
+//
+// Replaces the Expo template's <Tabs> navigator (the native "Home | Explore"
+// bar you saw at the bottom of the device screenshot). Each screen now
+// renders its own chrome, including the custom WorqariumNav pill bar, so a
+// second, native tab bar underneath it would be redundant.
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Stack } from 'expo-router';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
-  );
+export default function RootLayout() {
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

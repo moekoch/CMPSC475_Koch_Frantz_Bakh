@@ -1,70 +1,116 @@
+// src/screens/joinSessionScreen.js
+//
+// Matches the "Join Session (Mobile)" Figma mockup: ocean background with
+// fish swimming freely, floating settings + chat icons top-right, a
+// centered card prompting the user to join, and the Worqarium bottom nav.
+
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Bubbles from '../components/aquarium/Bubbles';
 import FishSprite from '../components/aquarium/FishSprite';
-import GlassPanel from '../components/aquarium/GlassPanel';
-import OrganicButton from '../components/aquarium/OrganicButton';
 import WaterBackground from '../components/aquarium/WaterBackground';
-import { COLORS, FONTS } from '../constants/theme';
+import WorqariumNav from '../components/aquarium/WorqariumNav';
+import { FISH_KEYS } from '../constants/fishAssets';
+import { COLORS, FONTS, RADII } from '../constants/theme';
 
-const SCHOOL = [
-  { species: 'blueTang', width: 70, top: '18%', left: '8%' },
-  { species: 'moorishIdol', width: 56, top: '12%', left: '62%' },
-  { species: 'threadfinButterflyfish', width: 64, top: '30%', left: '40%' },
-  { species: 'schoolingBannerfish', width: 60, top: '24%', left: '78%' },
-  { species: 'linedButterflyfish', width: 58, top: '40%', left: '18%' },
-];
-
-/**
- * A quiet moment before diving in: the tank is already alive with other
- * fish swimming by, and one panel invites the user into a session. This is
- * intentionally sparse — the water itself is the content here.
- */
 export default function JoinSessionScreen({ navigation }) {
+  const keyAt = (i) => (FISH_KEYS.length ? FISH_KEYS[i % FISH_KEYS.length] : null);
+
+  const handleDiveIn = () => navigation?.navigate('activeSession');
+
   return (
-    <WaterBackground depth="mid">
-      <Bubbles count={9} />
+    <WaterBackground style={styles.root}>
+      {/* swimming fish, scattered around the card */}
+      <FishSprite fishKey={keyAt(0)} width={90} style={{ top: 90, left: 20 }} />
+      <FishSprite fishKey={keyAt(1)} width={60} style={{ top: 64, left: -8 }} mirror />
+      <FishSprite fishKey={keyAt(2)} width={56} style={{ top: 220, right: 12 }} />
+      <FishSprite fishKey={keyAt(3)} width={72} style={{ bottom: 170, left: 8 }} />
+      <FishSprite fishKey={keyAt(4)} width={92} style={{ bottom: 200, right: -6 }} mirror />
+      <FishSprite fishKey={keyAt(5)} width={40} style={{ bottom: 110, left: 120 }} />
 
-      <View style={styles.topBar}>
-        <Pressable onPress={() => navigation?.goBack?.()} hitSlop={10}>
-          <Ionicons name="chevron-back" size={24} color={COLORS.pearl} />
+      {/* floating action icons */}
+      <View style={styles.iconStack}>
+        <Pressable style={styles.iconBtn} hitSlop={8}>
+          <Ionicons name="settings-outline" size={22} color={COLORS.ink} />
         </Pressable>
-        <Pressable hitSlop={10}>
-          <Ionicons name="notifications-outline" size={22} color={COLORS.pearl} />
+        <Pressable style={styles.iconBtn} hitSlop={8}>
+          <Ionicons name="chatbubble-outline" size={20} color={COLORS.ink} />
         </Pressable>
       </View>
 
-      {SCHOOL.map((f, i) => (
-        <FishSprite key={i} species={f.species} width={f.width} swim style={{ position: 'absolute', top: f.top, left: f.left }} />
-      ))}
-
-      <View style={styles.bottomArea}>
-        <GlassPanel corner="organicA" style={styles.panel}>
-          <Text style={styles.heading}>Ready to join a session?</Text>
-          <Text style={styles.sub}>Four friends are already coworking in the reef.</Text>
-          <OrganicButton
-            label="Dive In"
-            icon={<Ionicons name="arrow-down-circle" size={18} color={COLORS.pearl} />}
-            onPress={() => navigation?.navigate?.('ActiveSession')}
-            style={{ marginTop: 16, alignSelf: 'flex-start' }}
-          />
-        </GlassPanel>
+      {/* central prompt card */}
+      <View style={styles.cardWrap}>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Ready to join{'\n'}a session?</Text>
+          <Pressable style={styles.diveBtn} onPress={handleDiveIn}>
+            <Text style={styles.diveBtnText}>Dive in!</Text>
+          </Pressable>
+        </View>
       </View>
+
+      <WorqariumNav active="home" navigation={navigation} />
     </WaterBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  topBar: {
+  root: { flex: 1 },
+  iconStack: {
     position: 'absolute',
-    top: 56,
-    left: 20,
+    top: 48,
     right: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 12,
+    alignItems: 'center',
   },
-  bottomArea: { flex: 1, justifyContent: 'flex-end', padding: 20, paddingBottom: 48 },
-  panel: { padding: 20 },
-  heading: { fontFamily: FONTS.heading, fontSize: 20, color: COLORS.ink },
-  sub: { fontFamily: FONTS.body, fontSize: 14, color: COLORS.inkSoft, marginTop: 6 },
+  iconBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  cardWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 28,
+  },
+  card: {
+    width: '100%',
+    maxWidth: 320,
+    backgroundColor: COLORS.pearl,
+    ...RADII.organicA,
+    paddingVertical: 36,
+    paddingHorizontal: 28,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
+  },
+  cardTitle: {
+    fontFamily: FONTS.heading,
+    fontSize: 26,
+    lineHeight: 32,
+    textAlign: 'center',
+    color: COLORS.ink,
+    marginBottom: 20,
+  },
+  diveBtn: {
+    backgroundColor: COLORS.deepWater,
+    paddingVertical: 14,
+    paddingHorizontal: 36,
+    borderRadius: 8,
+  },
+  diveBtnText: {
+    fontFamily: FONTS.bodyBold,
+    fontSize: 18,
+    color: COLORS.pearl,
+  },
 });
